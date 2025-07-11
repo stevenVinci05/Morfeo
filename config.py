@@ -1,0 +1,5 @@
+TOKEN = 'MTM2OTM2OTY1OTM2Njk2OTM2NQ.GWZtoL.tv7_Io9TT7gs2dQkFKcrH03HVlvu3_UuAp6jXk'
+PREFIX = '!'
+MAX_MSG = 3
+MAX_TMP = 5
+JSON_BANNED = 'data/banned_words.json'
