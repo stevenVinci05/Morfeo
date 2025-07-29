@@ -17,8 +17,17 @@ bot = commands.Bot(command_prefix=config.PREFIX, intents=intents)
 @bot.event
 async def on_ready():
     print(f"✅ {bot.user} è online!")
-    synced = await bot.tree.sync()
-    print(f"🔄 Slash command sincronizzati: {len(synced)}")
+    count = 0
+    for guild in bot.guilds:
+        synced = await bot.tree.sync(guild=guild)
+        print(f"🔄 Slash command sincronizzati per la guild {guild.name} ({guild.id}): {len(synced)}")
+        count += 1
+    print(f"✅ Sincronizzazione completata per {count} server.")
+
+@bot.event
+async def on_guild_join(guild):
+    synced = await bot.tree.sync(guild=guild)
+    print(f"🔄 Slash command sincronizzati per la nuova guild {guild.name} ({guild.id}): {len(synced)}")
 
 async def load_cogs():
     for filename in os.listdir('./cogs'):
