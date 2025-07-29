@@ -8,7 +8,7 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="delete")
+    @commands.hybrid_command(name="delete", description="Cancella un numero di messaggi.")
     @commands.has_permissions(administrator=True)
     async def delete(self, ctx, numero: int = 1):
         await ctx.channel.purge(limit=numero + 1)
@@ -20,7 +20,7 @@ class Admin(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("🚫 Solo gli admin possono usare questo comando!", delete_after=5)
 
-    @commands.command(name="clear_user")
+    @commands.hybrid_command(name="clear_user", description="Cancella i messaggi di un utente.")
     @commands.has_permissions(administrator=True)
     async def clear_user(self, ctx, member: discord.Member, numero: int = 1):
         def is_user(m):
@@ -40,7 +40,7 @@ class Admin(commands.Cog):
         elif isinstance(error, commands.BadArgument):
             await ctx.send("⚠️ L'utente menzionato non è valido.", delete_after=5)
 
-    @commands.command(name="ban")
+    @commands.hybrid_command(name="ban", description="Banna un utente dal server.")
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, motivo: str = None):
         try:
@@ -61,7 +61,7 @@ class Admin(commands.Cog):
         elif isinstance(error, commands.BadArgument):
             await ctx.send("⚠️ L'utente menzionato non è valido.", delete_after=5)
 
-    @commands.command(name="kick")
+    @commands.hybrid_command(name="kick", description="Espelli un utente dal server.")
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, motivo: str = None):
         try:
@@ -82,7 +82,7 @@ class Admin(commands.Cog):
         elif isinstance(error, commands.BadArgument):
             await ctx.send("⚠️ L'utente menzionato non è valido.", delete_after=5)
 
-    @commands.command(name="mute")
+    @commands.hybrid_command(name="mute", description="Muta un utente.")
     @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, motivo: str = None):
         muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
@@ -118,10 +118,9 @@ class Admin(commands.Cog):
         elif isinstance(error, commands.BadArgument):
             await ctx.send("⚠️ L'utente menzionato non è valido.", delete_after=5)
 
-    @commands.command(name="list_bans")
+    @commands.hybrid_command(name="list_bans", description="Mostra la lista degli utenti bannati.")
     @commands.has_permissions(administrator=True)
     async def list_bans(self, ctx):
-
         try:
             ban_entries = [entry async for entry in ctx.guild.bans()]
 
@@ -133,15 +132,12 @@ class Admin(commands.Cog):
             if len(output) > 1900:
                 output = output[:1900] + "\n... (lista troncata)"
             await ctx.send(f"📛 Utenti bannati:\n{output}")
-
         except discord.Forbidden:
             await ctx.send("❌ Non ho i permessi per vedere la lista dei bannati.")
         except Exception as e:
             await ctx.send(f"❌ Errore ottenendo la lista dei bannati: {e}")
 
-
-
-    @commands.command(name="unban")
+    @commands.hybrid_command(name="unban", description="Sbanna un utente dal server.")
     @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, user: str):
         try:
@@ -174,7 +170,7 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.send(f"❌ Errore durante lo sbanno: {e}")
 
-    @commands.command(name="add")
+    @commands.hybrid_command(name="add", description="Aggiungi una parola alla lista ban.")
     @commands.has_permissions(administrator=True)
     async def add(self, ctx, *, parola: str):
         parola = parola.lower()
@@ -185,9 +181,8 @@ class Admin(commands.Cog):
         parole.append(parola)
         WriteFile(config.JSON_BANNED, parole)
         await ctx.send(f"✅ Parola `{parola}` aggiunta con successo.")
-    
-    
-    @commands.command(name="rem")
+
+    @commands.hybrid_command(name="rem", description="Rimuovi una parola dalla lista ban.")
     @commands.has_permissions(administrator=True)
     async def rem(self, ctx, *, parola: str):
         parola = parola.lower()
@@ -199,11 +194,10 @@ class Admin(commands.Cog):
         WriteFile(config.JSON_BANNED, parole)
         await ctx.send(f"✅ Parola `{parola}` rimossa con successo.")
 
-    @commands.command(name="provaI")
+    @commands.hybrid_command(name="provai", description="Testa la tossicità di una parola.")
     @commands.has_permissions(administrator=True)
-    async def provaI(self, ctx, *, parola: str):
+    async def provai(self, ctx, *, parola: str):
         await ctx.send(is_tossic(parola))
 
 async def setup(bot):
-
     await bot.add_cog(Admin(bot))

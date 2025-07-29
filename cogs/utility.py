@@ -4,7 +4,7 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.hybrid_command(description="Saluta l'utente.")
     async def ciao(self, ctx):
         await ctx.send(f"Ciao {ctx.author.mention}!")
 
